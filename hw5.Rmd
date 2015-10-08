@@ -1,0 +1,96 @@
+---
+title: "Homework 5"
+output: html_document
+---
+
+
+
+```{r}
+#1
+data(diamonds) #first we use the data function to load the diamonds dataset
+nums <- sapply(diamonds, is.numeric) #I then define a variable nums using the sapply function, which returns a matrix of all of the numerical entries of our dataset diamonds (by using the is.numberic command whcih creates or coerces objects of type numeric)
+diamonds[,nums]
+
+
+
+
+#2
+class(dd)
+dd=combn(names(diamonds),2,simplify=FALSE) #first I define dd to be a dataframe of all of the combinations of pairs of our variables (using the combn function). I then had to create a seperate csv document with each of said combinations in one column and their respective pearson correlation coefficients in the 2nd column (which i calculated below)
+
+cor(diamonds["y"],diamonds["z"],method=c("pearson"))
+cor(diamonds["depth"],diamonds["table"],method=c("pearson"))
+cor(diamonds["depth"],diamonds["y"],method=c("pearson"))
+cor(diamonds["depth"],diamonds["x"],method=c("pearson"))
+cor(diamonds["depth"],diamonds["price"],method=c("pearson"))
+cor(diamonds["carat"],diamonds["depth"],method=c("pearson"))
+cor(diamonds["depth"],diamonds["z"],method=c("pearson"))
+cor(diamonds["table"],diamonds["price"],method=c("pearson"))
+cor(diamonds["table"],diamonds["z"],method=c("pearson"))
+cor(diamonds["carat"],diamonds["table"],method=c("pearson"))
+cor(diamonds["y"],diamonds["table"],method=c("pearson"))
+cor(diamonds["x"],diamonds["table"],method=c("pearson"))
+cor(diamonds["price"],diamonds["z"],method=c("pearson"))
+cor(diamonds["price"],diamonds["x"],method=c("pearson"))
+cor(diamonds["price"],diamonds["y"],method=c("pearson"))
+cor(diamonds["price"],diamonds["carat"],method=c("pearson"))
+cor(diamonds["y"],diamonds["carat"],method=c("pearson"))
+cor(diamonds["x"],diamonds["z"],method=c("pearson"))
+cor(diamonds["x"],diamonds["y"],method=c("pearson"))
+cor(diamonds["carat"],diamonds["x"],method=c("pearson"))
+
+
+
+
+#3
+
+d2=diamonds[,nums] #here I define d2 to be our data frame diamonds, but with only the numerical columns that we selected earlier; so it returns a matrix with 7 columns. I then use the plot function to create a scatter plot of the selected columns and title it with the variables and the pearson correlation coefficient we calculated earlier, and then title the y and x axis 
+plot(d2[,1],d2[,2],main="Carat-Depth, Pearson Correlation:.28224",xlab="Carat",ylab="Depth")
+
+plot(d2[,1],d2[,3],main="Carat-Table, Pearson Correlation:.18161",xlab="Carat",ylab="Table")
+
+plot(d2[,1],d2[,4],main="Carat-Price, Pearson Correlation:.9215913",xlab="Carat",ylab="Price")
+
+plot(d2[,1],d2[,6],main="Carat-Y, Pearson Correlation:.95172",xlab="Carat",ylab="Y")
+
+plot(d2[,1],d2[,7],main="Carat-Z, Pearson Correlation:.95338",xlab="Carat",ylab="Z")
+
+plot(d2[,1],d2[,5],main="Carat-X, Pearson Correlation:.97509",xlab="Carat",ylab="X")
+
+plot(d2[,2],d2[,3],main="Depth-Table, Pearson Correlation:-.2957785",xlab="Depth",ylab="Table")
+
+plot(d2[,2],d2[,6],main="Depth-Y, Pearson Correlation:-.0293407",xlab="Depth",ylab="Y")
+
+plot(d2[,2],d2[,3],main="Depth-X, Pearson Correlation:-.0252893",xlab="Depth",ylab="X")
+
+plot(d2[,2],d2[,4],main="Depth-Price, Pearson Correlation:-.0106474",xlab="Depth",ylab="Price")
+
+plot(d2[,2],d2[,7],main="Depth-Z, Pearson Correlation:.094923",xlab="Depth",ylab="Z")
+
+plot(d2[,3],d2[,4],main="Table-Price, Pearson Correlation:.1271339",xlab="Table",ylab="Price")
+
+plot(d2[,3],d2[,7],main="Table-Z, Pearson Correlation:.1509287",xlab="Table",ylab="Z")
+
+plot(d2[,3],d2[,6],main="Table-Y, Pearson Correlation:.1837601",xlab="Table",ylab="Y")
+
+plot(d2[,3],d2[,5],main="Table-X, Pearson Correlation:.1953443",xlab="Table",ylab="X")
+
+plot(d2[,4],d2[,7],main="Price-Z, Pearson Correlation:.8612494",xlab="Price",ylab="Z")
+
+plot(d2[,4],d2[,6],main="Price-Y, Pearson Correlation:.86542",xlab="Price",ylab="Y")
+
+plot(d2[,4],d2[,5],main="Price-X, Pearson Correlation:.88443",xlab="Price",ylab="X")
+
+plot(d2[,7],d2[,6],main="Z-Y, Pearson Correlation:.9520057",xlab="Z",ylab="Y")
+
+plot(d2[,7],d2[,5],main="Z-X, Pearson Correlation:.9707718",xlab="Z",ylab="X")
+
+plot(d2[,6],d2[,5],main="Y-X, Pearson Correlation:.9747015",xlab="Y",ylab="X")
+
+
+
+
+
+
+
+```

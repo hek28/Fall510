@@ -1,0 +1,51 @@
+---
+title: "TEST1R"
+output: html_document
+---
+
+
+```{r}
+#1
+data(diamonds) #I start by loading the data set diamonds and mtcars using the data function
+data(mtcars)
+x=mtcars['vs']==1  #I then define x to be a logical vector which returns true for all 1 values of the vs variable from the mtcars data set and false for anything else (which is just 0s for this particular variable)
+53940/32 #I then calculate how many times our new vector x (of length 32) goes into our diamonds dataset 
+
+x3=x[1:20]#based off the above calculation, I see that it goes into our data set 1685 times with a remainder of twenty, so I set x3 to be the first twenty elements of x (our logical vector)
+x1=c(rep(x,times=1685),rep(x3,times=1)) #and then I define x1 to be a vector that repeats the values of x 1685 times and x3 once using the c() function (which combines values into a vector)
+xlist=list(x1)#I then define xlist to be the list of our vector x1 using the list function
+dnew <-data.frame(diamonds,xlist)#and create a new data frame titled dnew which is a data frame consisting of our original data set with our new xlist added to teh end of it (using the data.frame() function)
+
+#2
+y<- sapply(dnew, is.factor)#I then define y to be the values of our new data frame that are factors using the sapply function to apply the is.factor function over each list in our data frame 
+y
+dfactor=dnew[y]#and then define dfactor to be those values from our old (new) data frame dnew
+z= sapply(dnew,is.logical) #I then define z to be the values of our new data frame that are logical using the sapply function to apply the is.logical function over each list in our data frame 
+dlogical=dnew[z]#and then define dlogical to be those values from dnew
+dlogicfactor=data.frame(dlogical,dfactor) #i then create a new data frame with  our two new data frames (dlogical and dfactor)
+cnames=c("Vs ratio","cut","color","clarity") #I define cnames to be a vector with the titles of our variables
+
+colnames(dlogicfactor)=cnames #and then using the colnames function, I apply cnames to our newest data frame dlogicfactor
+dlogicfactor
+#3
+
+
+counts <- table(dlogicfactor$cut)# I then use the table function to define  a variable counts which returns contingency table of the counts at each combination of factor levels for the vairable cut in our dlogicfactor data frame
+barplot(counts, main="Cut Distribution", xlab="Type of Cut") #I then use the barplot function to create a bar plot of this count
+
+c2 <- table(dlogicfactor$color) #I do the same thing with c2 and the variable color
+barplot(c2, main="Color Distribution", xlab="Color of Diamond") #and the same thing for barplot of the counts of color
+
+c3 <- table(dlogicfactor$clarity) #I do the exact same thing for c3 and the variable clarity
+barplot(c3, main="Clarity Distribution", xlab="Clarity of Diamond")#dito 
+
+c4<- table(dlogicfactor$`Vs ratio`) #And once again, I do the same thing for c4 and the variable vs ratio
+barplot(c4,main="VS ratio distribution",xlab="VS ratio")
+
+#4
+list4=list(counts,c2,c3,c4) #I then define a list named list 4, which is a list containing each of the contigency tables I defined above (so it returns one table of frequencies for each categorical and logical variable in the data frame)
+list4 
+
+```
+
+

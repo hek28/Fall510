@@ -1,0 +1,117 @@
+---
+title: "Hw6"
+output: html_document
+---
+
+
+
+```{r}
+
+#note, i made the mistake of creating this as seperate functions and then turning into one and haven't had the time to get rid of some of the duplicate code yet, so some of this is repetitive 
+explore <- function(data.frame,cthreshold,bs){
+
+df=data.frame #I start by assigning our data frame to the variable df
+dfnumeric=sapply(df,is.numeric) #and then define df numeric to be just the numeric variables in in our data frame 
+dfnumeric=df[dfnumeric]
+ln <- length(names(dfnumeric)) #I then set ln to be the length of dnumeric with the names function applied to it (so it gives us the the numer of columns in our data frame)
+colmean=c(colMeans(dfnumeric))#and then set colmean to be a vector of the column means of dfnumeric (using the colMeans function)
+lnbs=length(bs) #I set lnbs to be the length of our variable bs(bin size)
+if(ln>0){  #and run a loop that, if the ln>0, for i in 1 to ln and for j in 1 to lnbs
+for(i in 1:ln){ for(j in 1:lnbs){
+    mname <- substitute(dfnumeric[,i]) #i define mname using the substitute function to be the columns from dfnumeric
+    hist(dfnumeric[,i],col='blue',breaks=bs[j] ,main =paste('histogram of', names(dfnumeric[i])) ,xlab=names(dfnumeric[i])) #and then plot a histogram using the hist function of each of said columns from dfnumeric with the breaks= to the jth member of our vector bs
+    abline(v=colmean[i],col="red",lwd=1)# and i add a redline where the mean is with the abline function and setting v=colmean of our ith column (which we defined above)
+    hist(dfnumeric[,i],col='blue',freq=FALSE,breaks=bs[j],main =paste('histogram of', names(dfnumeric[i])) ,xlab=names(dfnumeric[i])) #i do the same thing here with freq=FALSE which gives us a density plot
+    abline(v=colmean[i],col="red",lwd=1)}}}
+
+d1=sapply(df,is.factor)#i define dfactor and dlogical to be our data frames but with only the logical and factor variables respectively
+  d2=sapply(df,is.logical)
+  dlogical=df[d2]
+  dfactor=df[d1]
+  n=length(dfactor)
+  m=length(dlogical)#i then set n, m to their respective lengths and run a loop that, conditioned on n,m >0; for i in 1 to n and 1 to m, i define counts to be a variable with the table function applied to the ith column of dfactor and dlogical and then use the barplot function to plot the results 
+  if(n>0){
+    for(i in 1:n){
+      counts <- table(dfactor[,i])
+      barplot(counts,xlab=colnames(dfactor[i]),col='gray')}
+  }
+  if(m>0){
+    for(i in 1:m)
+      counts <- table(dlogical[,i])
+      barplot(counts,xlab=colnames(dlogical[i]),col='gray')}
+  
+
+var_num <- df[which(lapply(df, is.numeric) == TRUE)] #then, using the code from lecture, i define var_num, var_factor,var_logical to be the respective columns from our data frame containing only those values (this is done far more efficiently in one line of code with which[lappy()]) function
+var_factor <- df[which(lapply(df, is.factor) == TRUE)]
+var_logical <- df[which(lapply(df, is.logical) == TRUE)]  
+
+corr_a <- cor(var_num, method="pearson") #then define corr_a using the corelation function on our numerical variables using the pearson method
+
+
+newname <- paste(names(corr_a[,1])[[1]],names(corr_a[1,])[[2]],sep="-") #and define newname using the paste function to be the names of our new column vectors (i.e. which variables we are looking at teh correlation coefficient to)
+
+threshold <- cthreshold #I then set threshold to be equal to cthreshold (one of our input parameters) and r_square, rsq_names, corr_list, and corr_names to be NULL
+r_square <- NULL
+rsq_names <- NULL
+corr_list <- NULL
+corr_names <- NULL
+
+len <- length(corr_a[1,]) #I define the len to be the length of the first row of our corr_a vector
+
+for (i in (1:(len-1))) { 
+  for (j in ((i+1):len)) {
+    #Form the name pair and add to the named pair vector
+    pair_name <- paste(names(corr_a[,1])[[i]],names(corr_a[1,])[[j]],sep="-")
+    rsq_names <- c(rsq_names, pair_name)
+    
+    #Add the r_square value to the value vector
+    r_square <- c(r_square, corr_a[i,j]^2)
+    
+    if (corr_a[i,j] > threshold) {
+      corr_names <- c(corr_names, pair_name)
+      corr_list <- c(corr_list, corr_a[i,j]) 
+    }
+  }
+}
+
+rsq_df <- data.frame(cbind(rsq_names, r_square))
+names(rsq_df)[1] <- "Pair"
+names(rsq_df)[2] <- "Value"
+corr_df <- data.frame(cbind(corr_names, corr_list))
+names(corr_df)[1] <- "Pair"
+names(corr_df)[2] <- "Value"
+rsq_corr_list <- list("rsquare"=rsq_df, "correlation"=corr_df)
+
+
+
+
+
+n=length(var_factor) #I define n, m to be the length of our logical and factor data frames
+m=length(var_logical)
+ctable=NULL #and set ctable,ctable2,ctablefactorlist,ctablelogicallist to be NULL
+ctable2=NULL
+ctablefactorlist=NULL
+ctablelogicallist=NULL
+totallist=NULL
+if (n>0){ #then I start a loop if n,m>0 then for i in 1 to n, ctable= the count of the ith column of either var_factor or var_logical and then the ith element of ctablefactor list is ctable with the list function applied to it
+  for (i in 1:n){
+    ctable=count(var_factor[,i])
+    ctablefactorlist[i]=list(ctable)
+  }}
+if (m>0){
+    for (i in 1:m){ #same thing for ctable2 and ctablelogicallist
+    ctable2=count(var_logical[,i])
+    ctablelogicallist[i]=list(ctable2)
+    }}
+numericalsummarylist=list(summary(var_num))#i then define numericalsummarylist to be the list of summary stats of our numerical variables (using the list and summary function)
+cfinallist=list(ctablelogicallist,ctablefactorlist) #create a list called c final list with ctablelogicallist and stablefactor list
+totallist=list(numericalsummarylist,rsq_corr_list,cfinallist)# and then finally total list which is formed by using the list function on numericalsummarylist, rsq_corr_list, and cfinallist
+return(totallist) #and then I return totallist
+
+}
+
+explore(cars,.025,c(5,10,20))
+explore(diamonds,.25,10)
+
+```
+

@@ -8,42 +8,36 @@ output: html_document
 ```{r}
 #1
 data(diamonds) #first we use the data function to load the diamonds dataset
-nums <- sapply(diamonds, is.numeric) #I then define a variable nums using the sapply function, which returns a matrix of all of the numerical entries of our dataset diamonds (by using the is.numberic command whcih creates or coerces objects of type numeric)
-diamonds[,nums]
-
-
+var_num <- diamonds[which(lapply(diamonds, is.numeric) == TRUE)] #then we use the which(lapply()) functions on our dataset diamonds to return a new variable "var_num" which is only the numeric values of the dataset (this is accomplished using is.numeric==TRUE)
 
 
 #2
-class(dd)
-dd=combn(names(diamonds),2,simplify=FALSE) #first I define dd to be a dataframe of all of the combinations of pairs of our variables (using the combn function). I then had to create a seperate csv document with each of said combinations in one column and their respective pearson correlation coefficients in the 2nd column (which i calculated below)
+corr_a <- cor(var_num, method="pearson")
+#I then define to corr_a to be a vector of the corelation values of our numerical variables (using our new data frame, var_num)
 
-cor(diamonds["y"],diamonds["z"],method=c("pearson"))
-cor(diamonds["depth"],diamonds["table"],method=c("pearson"))
-cor(diamonds["depth"],diamonds["y"],method=c("pearson"))
-cor(diamonds["depth"],diamonds["x"],method=c("pearson"))
-cor(diamonds["depth"],diamonds["price"],method=c("pearson"))
-cor(diamonds["carat"],diamonds["depth"],method=c("pearson"))
-cor(diamonds["depth"],diamonds["z"],method=c("pearson"))
-cor(diamonds["table"],diamonds["price"],method=c("pearson"))
-cor(diamonds["table"],diamonds["z"],method=c("pearson"))
-cor(diamonds["carat"],diamonds["table"],method=c("pearson"))
-cor(diamonds["y"],diamonds["table"],method=c("pearson"))
-cor(diamonds["x"],diamonds["table"],method=c("pearson"))
-cor(diamonds["price"],diamonds["z"],method=c("pearson"))
-cor(diamonds["price"],diamonds["x"],method=c("pearson"))
-cor(diamonds["price"],diamonds["y"],method=c("pearson"))
-cor(diamonds["price"],diamonds["carat"],method=c("pearson"))
-cor(diamonds["y"],diamonds["carat"],method=c("pearson"))
-cor(diamonds["x"],diamonds["z"],method=c("pearson"))
-cor(diamonds["x"],diamonds["y"],method=c("pearson"))
-cor(diamonds["carat"],diamonds["x"],method=c("pearson"))
+
+
+
+len <- length(corr_a[1,]) #and define len to be the length of the first row of corr_a
+
+
+corr_list <- NULL #i then create to variables, corr_list and corr_names and set them to be equal to NULL (this has to be done before starting the loop)
+corr_names <- NULL
+for (i in (1:(len-1))) { #and then use the for command to specify that for i,j in 1 to length-1 and i+1 to length
+  for (j in ((i+1):len)) {
+
+    pair_name <- paste(names(corr_a[,1])[[i]],names(corr_a[1,])[[j]],sep="-") #the pair name variable is the name of corr_a [i,1], corr_a[1,j] seperated by '-'
+    corr_names <- c(corr_names, pair_name) #corr_names is the ctor of corr_names, pair_name
+    corr_list <- c(corr_list, corr_a[i,j])}} #and corr_list is a vector of corr_list and the (i,j)th entry of corr_a
+corr_df <- data.frame(cbind(corr_names, corr_list)) #and then I use the data.frame function to define corr_df as a data frame consisting of corr_names, corr_list (using the cbind function)
+names(corr_df)[1] <- "Pair" #and define the names of the first and second columns of the new data frame using the names function to be "pair" and "value"
+names(corr_df)[2] <- "Value"
 
 
 
 
 #3
-
+nums= sapply(diamonds,is.numeric) #here i use the sapply function on diamonds to return only the entrie numbers of diamonds which are numeric (using the is.numeric command)
 d2=diamonds[,nums] #here I define d2 to be our data frame diamonds, but with only the numerical columns that we selected earlier; so it returns a matrix with 7 columns. I then use the plot function to create a scatter plot of the selected columns and title it with the variables and the pearson correlation coefficient we calculated earlier, and then title the y and x axis 
 plot(d2[,1],d2[,2],main="Carat-Depth, Pearson Correlation:.28224",xlab="Carat",ylab="Depth")
 

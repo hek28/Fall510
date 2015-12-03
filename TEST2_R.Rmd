@@ -134,8 +134,6 @@ Handle_Num2(a805[1])
   a80f=c(rep(0,times=1000))
  #and initiate a loop using the random sample function we created in class to get 1000 samples at each of the sample sizes we defined earlier and then calculate the mean for each itteration and store said means in a dataframe denoted df
   for (i in 1:1000){
-    randomSample = function(dataframe,n,replacement) {     
-    return (dataframe[sample(nrow(dataframe), n, replace=replacement),]) }
     a01=randomSample(abalone,x01,replacement=FALSE)
     a10=randomSample(abalone,x10,replacement=FALSE)
     a25=randomSample(abalone,x25,replacement=FALSE)
@@ -152,10 +150,6 @@ a50meanww=mean(a50[,5])
 a50f[i]=a50meanww
 a80meanww=mean(a80[,5])
 a80f[i]=a80meanww
-
-
-
-
 
 
   }
@@ -358,8 +352,6 @@ Handle_Num2(a805[1])
   a80f=c(rep(0,times=1000))
  
   for (i in 1:1000){
-    randomSample = function(dataframe,n,replacement) {     
-    return (dataframe[sample(nrow(dataframe), n, replace=replacement),]) }
     a01=randomSample(diamonds,x01,replacement=FALSE)
     a10=randomSample(diamonds,x10,replacement=FALSE)
     a25=randomSample(diamonds,x25,replacement=FALSE)
@@ -567,8 +559,6 @@ Handle_Num2(a805[1])
   a80f=c(rep(0,times=1000))
  
   for (i in 1:1000){
-    randomSample = function(dataframe,n,replacement) {     
-    return (dataframe[sample(nrow(dataframe), n, replace=replacement),]) }
     a01=randomSample(faithful,x01,replacement=FALSE)
     a10=randomSample(faithful,x10,replacement=FALSE)
     a25=randomSample(faithful,x25,replacement=FALSE)
@@ -585,8 +575,6 @@ a50meanww=mean(a50[,1])
 a50f[i]=a50meanww
 a80meanww=mean(a80[,1])
 a80f[i]=a80meanww
-
-
 
 
 

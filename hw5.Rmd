@@ -7,6 +7,8 @@ output: html_document
 
 ```{r}
 #1
+# SW: need to load the ggplot2 library to make the data set available
+library(ggplot2)
 data(diamonds) #first we use the data function to load the diamonds dataset
 var_num <- diamonds[which(lapply(diamonds, is.numeric) == TRUE)] #then we use the which(lapply()) functions on our dataset diamonds to return a new variable "var_num" which is only the numeric values of the dataset (this is accomplished using is.numeric==TRUE)
 
@@ -32,10 +34,11 @@ for (i in (1:(len-1))) { #and then use the for command to specify that for i,j i
 corr_df <- data.frame(cbind(corr_names, corr_list)) #and then I use the data.frame function to define corr_df as a data frame consisting of corr_names, corr_list (using the cbind function)
 names(corr_df)[1] <- "Pair" #and define the names of the first and second columns of the new data frame using the names function to be "pair" and "value"
 names(corr_df)[2] <- "Value"
+# SW: print out the data frame
+corr_df
+```
 
-
-
-
+```{r}
 #3
 nums= sapply(diamonds,is.numeric) #here i use the sapply function on diamonds to return only the entrie numbers of diamonds which are numeric (using the is.numeric command)
 d2=diamonds[,nums] #here I define d2 to be our data frame diamonds, but with only the numerical columns that we selected earlier; so it returns a matrix with 7 columns. I then use the plot function to create a scatter plot of the selected columns and title it with the variables and the pearson correlation coefficient we calculated earlier, and then title the y and x axis 
@@ -80,11 +83,37 @@ plot(d2[,7],d2[,6],main="Z-Y, Pearson Correlation:.9520057",xlab="Z",ylab="Y")
 plot(d2[,7],d2[,5],main="Z-X, Pearson Correlation:.9707718",xlab="Z",ylab="X")
 
 plot(d2[,6],d2[,5],main="Y-X, Pearson Correlation:.9747015",xlab="Y",ylab="X")
-
-
-
-
-
-
-
 ```
+```{r, eval = F}
+# SW: in general, you will not want to specify all the combinations manually,
+# it will be tedious and error-prone. here's code to do it generically.
+get_numeric <- function(dat) {
+  nc <- lapply(dat, class) %in% c("numeric","integer")
+  return(dat[,nc])
+}
+
+corrfn <- function(dat) {
+  comb <- combn(colnames(dat), 2)
+  out <- apply(comb, MARGIN = 2, 
+               FUN = function(x) {
+                 return(c(paste(x[1], x[2], sep="-"), 
+                          cor(dat[x[1]], dat[x[2]])))
+               })
+  return(data.frame(vars = out[1,], corr = out[2,]))
+}
+
+plotnum <- function(dat) {
+  dat_nc <- get_numeric(dat)
+  lbl <- corrfn(dat_nc)
+  comb <- combn(colnames(dat_nc), 2)
+  apply(comb, MARGIN = 2,
+        FUN = function(x) {
+          plot(dat_nc[,x[1]], dat_nc[,x[2]], xlab = x[1], ylab = x[2],
+               main = paste0(x[1],"-",x[2],": ",
+                             lbl[lbl[,1] == paste(x[1],x[2],sep="-"),2]))
+        })
+}
+
+plotnum(diamonds)
+```
+

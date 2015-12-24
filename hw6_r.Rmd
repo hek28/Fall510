@@ -3,7 +3,7 @@ title: "Hw6"
 output: html_document
 ---
 
-
+SW: did you test your code? it doesn't work as written. I've modified it to get it to knit together; in particular, I've added code to explicitly load the two libraries you need. you also need to consider the absolute value of the correlation coefficient; right now, you're only catching positive values. in general, though, this is good work. the assignment mentions binary variables, and your code should anticipate and handle them. for example, in the `mtcars` data set, the variable `am` is binary, which is essentially a logical vector.
 
 ```{r}
 
@@ -20,6 +20,10 @@ if(ln>0){  #and run a loop that, if the ln>0, for i in 1 to ln and for j in 1 to
 for(i in 1:ln){ for(j in 1:lnbs){
     mname <- substitute(dfnumeric[,i]) #i define mname using the substitute function to be the columns from dfnumeric
     hist(dfnumeric[,i],col='blue',breaks=bs[j] ,main =paste('histogram of', names(dfnumeric[i])) ,xlab=names(dfnumeric[i])) #and then plot a histogram using the hist function of each of said columns from dfnumeric with the breaks= to the jth member of our vector bs
+    # SW: you're using the breaks parameter, but this is _not_ the same as bin
+    # sizes or bin numbers; it specifies the actual breaks, which is very
+    # different.
+    
     abline(v=colmean[i],col="red",lwd=1)# and i add a redline where the mean is with the abline function and setting v=colmean of our ith column (which we defined above)
     hist(dfnumeric[,i],col='blue',freq=FALSE,breaks=bs[j],main =paste('histogram of', names(dfnumeric[i])) ,xlab=names(dfnumeric[i])) #i do the same thing here with freq=FALSE which gives us a density plot
     abline(v=colmean[i],col="red",lwd=1)}}}
@@ -95,6 +99,8 @@ ctablelogicallist=NULL
 totallist=NULL
 if (n>0){ #then I start a loop if n,m>0 then for i in 1 to n, ctable= the count of the ith column of either var_factor or var_logical and then the ith element of ctablefactor list is ctable with the list function applied to it
   for (i in 1:n){
+    # SW: are you calling the function count() from the package plyr? if so,
+    # you need to load that package.
     ctable=count(var_factor[,i])
     ctablefactorlist[i]=list(ctable)
   }}
@@ -110,7 +116,15 @@ return(totallist) #and then I return totallist
 
 }
 
-explore(cars,.025,c(5,10,20))
+# SW: did you test your code? you need to load ggplot2 to make the diamonds 
+# data set available.
+library(ggplot2)
+library(plyr) # loading to get the count function
+
+# SW: the assignment specified that you should test with the mtcars data set,
+# not the cars data set.
+#explore(cars,.025,c(5,10,20))
+explore(mtcars,.025,c(5,10,20))
 explore(diamonds,.25,10)
 
 ```
